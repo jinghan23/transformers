@@ -15,6 +15,7 @@
 """Convert Depth Anything checkpoints from the original repository. URL:
 https://github.com/LiheYoung/Depth-Anything"""
 
+
 import argparse
 from pathlib import Path
 

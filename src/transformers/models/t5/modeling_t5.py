@@ -12,7 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""PyTorch T5 model."""
+""" PyTorch T5 model."""
+
 
 import copy
 import math
@@ -58,6 +59,8 @@ _CHECKPOINT_FOR_DOC = "google-t5/t5-small"
 # This dict contains ids and associated url
 # for the pretrained weights provided with the models
 ####################################################
+
+from ..deprecated._archive_maps import T5_PRETRAINED_MODEL_ARCHIVE_LIST  # noqa: F401, E402
 
 
 ####################################################
@@ -674,7 +677,7 @@ class T5Block(nn.Module):
             if len(past_key_value) != expected_num_past_key_values:
                 raise ValueError(
                     f"There should be {expected_num_past_key_values} past states. "
-                    f"{'2 (key / value) for cross attention. ' if expected_num_past_key_values == 4 else ''}"
+                    f"{'2 (past / key) for cross attention. ' if expected_num_past_key_values == 4 else ''}"
                     f"Got {len(past_key_value)} past key / value states"
                 )
 

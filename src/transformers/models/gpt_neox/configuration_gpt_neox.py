@@ -12,13 +12,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""GPTNeoX model configuration"""
+""" GPTNeoX model configuration"""
 
 from ...configuration_utils import PretrainedConfig
 from ...utils import logging
 
 
 logger = logging.get_logger(__name__)
+
+
+from ..deprecated._archive_maps import GPT_NEOX_PRETRAINED_CONFIG_ARCHIVE_MAP  # noqa: F401, E402
 
 
 class GPTNeoXConfig(PretrainedConfig):
@@ -100,7 +103,6 @@ class GPTNeoXConfig(PretrainedConfig):
     ```"""
 
     model_type = "gpt_neox"
-    keys_to_ignore_at_inference = ["past_key_values"]
 
     def __init__(
         self,
@@ -164,7 +166,8 @@ class GPTNeoXConfig(PretrainedConfig):
 
         if not isinstance(self.rope_scaling, dict) or len(self.rope_scaling) != 2:
             raise ValueError(
-                "`rope_scaling` must be a dictionary with two fields, `type` and `factor`, " f"got {self.rope_scaling}"
+                "`rope_scaling` must be a dictionary with with two fields, `type` and `factor`, "
+                f"got {self.rope_scaling}"
             )
         rope_scaling_type = self.rope_scaling.get("type", None)
         rope_scaling_factor = self.rope_scaling.get("factor", None)

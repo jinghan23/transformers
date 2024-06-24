@@ -12,7 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""PyTorch mT5 model."""
+""" PyTorch mT5 model."""
 
 import copy
 import math
@@ -552,7 +552,7 @@ class MT5Block(nn.Module):
             if len(past_key_value) != expected_num_past_key_values:
                 raise ValueError(
                     f"There should be {expected_num_past_key_values} past states. "
-                    f"{'2 (key / value) for cross attention. ' if expected_num_past_key_values == 4 else ''}"
+                    f"{'2 (past / key) for cross attention. ' if expected_num_past_key_values == 4 else ''}"
                     f"Got {len(past_key_value)} past key / value states"
                 )
 

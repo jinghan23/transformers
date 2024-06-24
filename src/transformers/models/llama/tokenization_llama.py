@@ -19,7 +19,6 @@
 # limitations under the License.
 
 """Tokenization classes for LLaMA."""
-
 import os
 from shutil import copyfile
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
@@ -100,30 +99,30 @@ class LlamaTokenizer(PreTrainedTokenizer):
             Whether or not to add spaces between special tokens.
         legacy (`bool`, *optional*):
             Whether or not the `legacy` behavior of the tokenizer should be used. Legacy is before the merge of #24622
-            and #25224 which includes fixes to properly handle tokens that appear after special tokens.
-            Make sure to also set `from_slow` to `True`.
-            A simple example:
+            and #25224 which includes fixes to properly handle tokens that appear after special tokens. A simple
+            example:
 
             - `legacy=True`:
             ```python
-            >>> from transformers import LlamaTokenizerFast
+            >>> from transformers import T5Tokenizer
 
-            >>> tokenizer = LlamaTokenizerFast.from_pretrained("huggyllama/llama-7b", legacy=True, from_slow=True)
-            >>> tokenizer.encode("Hello <s>.") # 869 is '▁.'
-            [1, 15043, 29871, 1, 869]
+            >>> tokenizer = T5Tokenizer.from_pretrained("google-t5/t5-base", legacy=True)
+            >>> tokenizer.encode("Hello <extra_id_0>.")
+            [8774, 32099, 3, 5, 1]
             ```
             - `legacy=False`:
             ```python
-            >>> from transformers import LlamaTokenizerFast
+            >>> from transformers import T5Tokenizer
 
-            >>> tokenizer = LlamaTokenizerFast.from_pretrained("huggyllama/llama-7b", legacy=False, from_slow=True)
-            >>> tokenizer.encode("Hello <s>.")  # 29889 is '.'
-            [1, 15043, 29871, 1, 29889]
+            >>> tokenizer = T5Tokenizer.from_pretrained("google-t5/t5-base", legacy=False)
+            >>> tokenizer.encode("Hello <extra_id_0>.")  # the extra space `[3]` is no longer here
+            [8774, 32099, 5, 1]
             ```
             Checkout the [pull request](https://github.com/huggingface/transformers/pull/24565) for more details.
         add_prefix_space (`bool`, *optional*, defaults to `True`):
             Whether or not to add an initial space to the input. This allows to treat the leading word just as any
-            other word. Again, this should be set with `from_slow=True` to make sure it's taken into account.
+            other word.
+
     """
 
     vocab_files_names = VOCAB_FILES_NAMES
@@ -158,8 +157,7 @@ class LlamaTokenizer(PreTrainedTokenizer):
                 " expected, and simply means that the `legacy` (previous) behavior will be used so nothing changes for you."
                 " If you want to use the new behaviour, set `legacy=False`. This should only be set if you understand what it"
                 " means, and thoroughly read the reason why this was added as explained in"
-                " https://github.com/huggingface/transformers/pull/24565 - if you loaded a llama tokenizer from a GGUF file"
-                " you can ignore this message"
+                " https://github.com/huggingface/transformers/pull/24565"
             )
             legacy = True
 
@@ -297,8 +295,6 @@ class LlamaTokenizer(PreTrainedTokenizer):
                 prev_is_special = True
                 current_sub_tokens = []
             else:
-                if prev_is_special and i == 1 and self.add_prefix_space and not token.startswith(SPIECE_UNDERLINE):
-                    out_string += " "
                 current_sub_tokens.append(token)
                 prev_is_special = False
         out_string += self.sp_model.decode(current_sub_tokens)
@@ -431,6 +427,12 @@ class LlamaTokenizer(PreTrainedTokenizer):
         snippet](https://github.com/facebookresearch/llama/blob/556949fdfb72da27c2f4a40b7f0e4cf0b8153a28/llama/generation.py#L320-L362)
         in the original repository.
         """
+        logger.warning_once(
+            "\nNo chat template is defined for this tokenizer - using the default template "
+            f"for the {self.__class__.__name__} class. If the default is not appropriate for "
+            "your model, please set `tokenizer.chat_template` to an appropriate template. "
+            "See https://huggingface.co/docs/transformers/main/chat_templating for more information.\n"
+        )
         template = (
             "{% if messages[0]['role'] == 'system' %}"
             "{% set loop_messages = messages[1:] %}"  # Extract system message if it's present

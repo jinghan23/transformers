@@ -52,6 +52,9 @@ _CHECKPOINT_FOR_DOC = "almanach/camembert-base"
 _CONFIG_FOR_DOC = "CamembertConfig"
 
 
+from ..deprecated._archive_maps import CAMEMBERT_PRETRAINED_MODEL_ARCHIVE_LIST  # noqa: F401, E402
+
+
 CAMEMBERT_START_DOCSTRING = r"""
 
     This model inherits from [`PreTrainedModel`]. Check the superclass documentation for the generic methods the
@@ -309,18 +312,11 @@ class CamembertSelfOutput(nn.Module):
         return hidden_states
 
 
-CAMEMBERT_SELF_ATTENTION_CLASSES = {
-    "eager": CamembertSelfAttention,
-}
-
-
-# Copied from transformers.models.roberta.modeling_roberta.RobertaAttention with Roberta->Camembert,ROBERTA->CAMEMBERT
+# Copied from transformers.models.roberta.modeling_roberta.RobertaAttention with Roberta->Camembert
 class CamembertAttention(nn.Module):
     def __init__(self, config, position_embedding_type=None):
         super().__init__()
-        self.self = CAMEMBERT_SELF_ATTENTION_CLASSES[config._attn_implementation](
-            config, position_embedding_type=position_embedding_type
-        )
+        self.self = CamembertSelfAttention(config, position_embedding_type=position_embedding_type)
         self.output = CamembertSelfOutput(config)
         self.pruned_heads = set()
 
@@ -749,7 +745,7 @@ class CamembertModel(CamembertPreTrainedModel):
 
     _no_split_modules = []
 
-    # Copied from transformers.models.clap.modeling_clap.ClapTextModel.__init__ with ClapText->Camembert
+    # Copied from transformers.models.bert.modeling_bert.BertModel.__init__ with Bert->Camembert
     def __init__(self, config, add_pooling_layer=True):
         super().__init__(config)
         self.config = config
@@ -782,7 +778,7 @@ class CamembertModel(CamembertPreTrainedModel):
         output_type=BaseModelOutputWithPoolingAndCrossAttentions,
         config_class=_CONFIG_FOR_DOC,
     )
-    # Copied from transformers.models.clap.modeling_clap.ClapTextModel.forward
+    # Copied from transformers.models.bert.modeling_bert.BertModel.forward
     def forward(
         self,
         input_ids: Optional[torch.Tensor] = None,

@@ -14,6 +14,7 @@
 # limitations under the License.
 """Tokenization classes for Bert."""
 
+
 import collections
 import os
 import unicodedata

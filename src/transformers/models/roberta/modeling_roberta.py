@@ -52,6 +52,9 @@ _CHECKPOINT_FOR_DOC = "FacebookAI/roberta-base"
 _CONFIG_FOR_DOC = "RobertaConfig"
 
 
+from ..deprecated._archive_maps import ROBERTA_PRETRAINED_MODEL_ARCHIVE_LIST  # noqa: F401, E402
+
+
 class RobertaEmbeddings(nn.Module):
     """
     Same as BertEmbeddings with a tiny tweak for positional embeddings indexing.
@@ -291,18 +294,11 @@ class RobertaSelfOutput(nn.Module):
         return hidden_states
 
 
-ROBERTA_SELF_ATTENTION_CLASSES = {
-    "eager": RobertaSelfAttention,
-}
-
-
-# Copied from transformers.models.bert.modeling_bert.BertAttention with Bert->Roberta,BERT->ROBERTA
+# Copied from transformers.models.bert.modeling_bert.BertAttention with Bert->Roberta
 class RobertaAttention(nn.Module):
     def __init__(self, config, position_embedding_type=None):
         super().__init__()
-        self.self = ROBERTA_SELF_ATTENTION_CLASSES[config._attn_implementation](
-            config, position_embedding_type=position_embedding_type
-        )
+        self.self = RobertaSelfAttention(config, position_embedding_type=position_embedding_type)
         self.output = RobertaSelfOutput(config)
         self.pruned_heads = set()
 
@@ -692,7 +688,7 @@ class RobertaModel(RobertaPreTrainedModel):
 
     """
 
-    # Copied from transformers.models.clap.modeling_clap.ClapTextModel.__init__ with ClapText->Roberta
+    # Copied from transformers.models.bert.modeling_bert.BertModel.__init__ with Bert->Roberta
     def __init__(self, config, add_pooling_layer=True):
         super().__init__(config)
         self.config = config
@@ -725,7 +721,7 @@ class RobertaModel(RobertaPreTrainedModel):
         output_type=BaseModelOutputWithPoolingAndCrossAttentions,
         config_class=_CONFIG_FOR_DOC,
     )
-    # Copied from transformers.models.clap.modeling_clap.ClapTextModel.forward
+    # Copied from transformers.models.bert.modeling_bert.BertModel.forward
     def forward(
         self,
         input_ids: Optional[torch.Tensor] = None,

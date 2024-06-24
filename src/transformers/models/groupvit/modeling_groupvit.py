@@ -12,7 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""PyTorch GroupViT model."""
+""" PyTorch GroupViT model."""
+
 
 import collections.abc
 import math
@@ -41,6 +42,9 @@ from .configuration_groupvit import GroupViTConfig, GroupViTTextConfig, GroupViT
 logger = logging.get_logger(__name__)
 
 _CHECKPOINT_FOR_DOC = "nvidia/groupvit-gcc-yfcc"
+
+
+from ..deprecated._archive_maps import GROUPVIT_PRETRAINED_MODEL_ARCHIVE_LIST  # noqa: F401, E402
 
 
 # contrastive loss function, adapted from
@@ -1114,7 +1118,6 @@ class GroupViTTextTransformer(nn.Module):
             pooled_output = last_hidden_state[
                 torch.arange(last_hidden_state.shape[0], device=last_hidden_state.device),
                 # We need to get the first position of `eos_token_id` value (`pad_token_ids` might equal to `eos_token_id`)
-                # Note: we assume each sequence (along batch dim.) contains an  `eos_token_id` (e.g. prepared by the tokenizer)
                 (input_ids.to(dtype=torch.int, device=last_hidden_state.device) == self.eos_token_id)
                 .int()
                 .argmax(dim=-1),

@@ -12,8 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""DeBERTa-v2 model configuration"""
-
+""" DeBERTa-v2 model configuration"""
 from collections import OrderedDict
 from typing import TYPE_CHECKING, Any, Mapping, Optional, Union
 
@@ -27,6 +26,9 @@ if TYPE_CHECKING:
 
 
 logger = logging.get_logger(__name__)
+
+
+from ..deprecated._archive_maps import DEBERTA_V2_PRETRAINED_CONFIG_ARCHIVE_MAP  # noqa: F401, E402
 
 
 class DebertaV2Config(PretrainedConfig):
@@ -75,7 +77,7 @@ class DebertaV2Config(PretrainedConfig):
             as `max_position_embeddings`.
         pad_token_id (`int`, *optional*, defaults to 0):
             The value used to pad input_ids.
-        position_biased_input (`bool`, *optional*, defaults to `True`):
+        position_biased_input (`bool`, *optional*, defaults to `False`):
             Whether add absolute position embedding to content embedding.
         pos_att_type (`List[str]`, *optional*):
             The type of relative position attention, it can be a combination of `["p2c", "c2p"]`, e.g. `["p2c"]`,
