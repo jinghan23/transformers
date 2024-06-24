@@ -652,6 +652,8 @@ class LlamaSdpaAttention(LlamaAttention):
             cache_kwargs = {"sin": sin, "cos": cos, "cache_position": cache_position}
             key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
 
+        ############################ edit for adapter ############################
+        # add intermediate variable for hook
         # (bsz, num_key_value_heads, adapter_len, head_dim)
         self.key_states = key_states.clone()
         self.value_states = value_states.clone()

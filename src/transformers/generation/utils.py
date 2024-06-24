@@ -666,6 +666,8 @@ class GenerationMixin:
         if "cache_position" in model_kwargs and model_kwargs["cache_position"] is not None:
             model_kwargs["cache_position"] = model_kwargs["cache_position"][-1:] + 1
 
+        ############################ edit for adapter ############################
+        # edit position_ids to the newest when given
         if "position_ids" in model_kwargs and model_kwargs["position_ids"] is not None:
             model_kwargs["position_ids"] = model_kwargs["position_ids"].squeeze(0)[-1:] + 1
             model_kwargs["position_ids"] = model_kwargs["position_ids"].unsqueeze(0)
